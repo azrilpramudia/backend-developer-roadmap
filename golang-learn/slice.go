@@ -54,7 +54,7 @@ func main() {
 	fmt.Println(newSlice2)
 	fmt.Println(newSlice)
 
-	// copy array
+	// copy slice
 	fromSlice := days[:]
 	toSlice := make([]string, len(fromSlice), cap(fromSlice))
 
