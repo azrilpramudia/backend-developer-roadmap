@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
@@ -12,5 +13,11 @@ func main() {
 		_, _ = w.Write([]byte("Hello from Go"))
 	})
 
-	log.Fatal(http.ListenAndServe(":3000", mux))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "3000"
+	}
+
+	log.Println("server running on port: " + port)
+	log.Fatal(http.ListenAndServe(":"+port, mux))
 }
