@@ -2,11 +2,17 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"log/slog"
 	"net/http"
 )
+
+type UserData struct {
+	Name string
+}
 
 func main() {
 	mux := http.NewServeMux()
@@ -16,6 +22,7 @@ func main() {
 	mux.HandleFunc("/hello/", handleHelloParameterized)
 	mux.HandleFunc("/responses/{user}/hello/", handleUserResponsesHello)
 	mux.HandleFunc("/user/hello/", handleHelloHeader)
+	mux.HandleFunc("/json/", handleJSON)
 
 	log.Fatal(http.ListenAndServe(":3000", mux))
 }
@@ -65,6 +72,36 @@ func handleHelloHeader(w http.ResponseWriter, r *http.Request) {
 	}
 
 	handleHello(w, username)
+}
+
+func handleJSON(w http.ResponseWriter, r *http.Request) {
+	byteData, err := io.ReadAll(r.Body)
+	if err != nil {
+		slog.Error("error reading request body", "err", err)
+		http.Error(w, "bad request body", http.StatusBadRequest)
+		return
+	}
+
+	if len(byteData) < 1 {
+		slog.Warn("request body is empty")
+		http.Error(w, "bad request body", http.StatusBadRequest)
+		return
+	}
+
+	var reqData UserData
+	err = json.Unmarshal(byteData, &reqData)
+	if err != nil {
+		slog.Error("error unmarshalling request body", "err", err)
+		http.Error(w, "error parsing request JSON", http.StatusBadRequest)
+		return
+	}
+
+	if reqData.Name == "" {
+		http.Error(w, "invalid username provided", http.StatusBadRequest)
+		return
+	}
+
+	handleHello(w, reqData.Name)
 }
 
 func handleHello(w http.ResponseWriter, username string) {
