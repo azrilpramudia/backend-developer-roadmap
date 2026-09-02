@@ -11,7 +11,7 @@ type Handler struct {
 	usecase Usecase
 }
 
-func NewHandler(u usecase) *Handler {
+func NewHandler(u Usecase) *Handler {
 	return &Handler{usecase: u}
 }
 

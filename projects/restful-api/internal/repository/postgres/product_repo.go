@@ -24,7 +24,7 @@ func (r *productRepo) Create(ctx context.Context, p *product.Product) error {
 }
 
 func (r *productRepo) GetByID(ctx context.Context, id int64) (*product.Product, error) {
-	query := `SELECT id, name, stock, created_at, updated_at
+	query := `SELECT id, name, price, stock, created_at, updated_at
 						FROM products WHERE id = $1`
 	p := &product.Product{}
 	err := r.db.QueryRowContext(ctx, query, id).

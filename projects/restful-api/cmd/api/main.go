@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/azrilpramudia/go-restful-api/internal/config"
+	"github.com/azrilpramudia/go-restful-api/internal/docs"
 	"github.com/azrilpramudia/go-restful-api/internal/product"
 	"github.com/azrilpramudia/go-restful-api/internal/repository/postgres"
 	"github.com/azrilpramudia/go-restful-api/pkg/database"
@@ -25,6 +26,9 @@ func main() {
 
 	mux := http.NewServeMux()
 	productHandler.RegisterRoutes(mux)
+
+	docsHandler := docs.NewHandler()
+	docsHandler.RegisterRoutes(mux)
 
 	log.Printf("server running on :%s", cfg.AppPort)
 	if err := http.ListenAndServe(":"+cfg.AppPort, mux); err != nil {
