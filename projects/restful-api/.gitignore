@@ -1,0 +1,13 @@
+# Environment
+.env
+
+# Build output
+bin/
+tmp/
+
+# Go
+vendor/
+
+# Editor
+.vscode/
+.idea/
