@@ -3,6 +3,7 @@ package product
 import (
 	"encoding/json"
 	"errors"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -44,6 +45,7 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 			writeError(w, http.StatusBadRequest, err.Error())
 			return
 		}
+		log.Printf("Create error: %v", err)
 		writeError(w, http.StatusInternalServerError, "internal server error")
 		return
 	}
